@@ -1,0 +1,13 @@
+WITH check_repeated AS (
+ SELECT customer_unique_id, COUNT(DISTINCT order_id) AS order_count
+ FROM customers
+ JOIN orders
+ ON orders.customer_id=customers.customer_id
+ WHERE order_status = 'delivered'
+ GROUP BY customer_unique_id
+ )
+SELECT
+ (SELECT COUNT(*) FROM check_repeated WHERE order_count > 1) AS repeated_customers,
+ (SELECT COUNT(*) FROM check_repeated) AS total_customers,
+ ROUND((SELECT COUNT(*) FROM check_repeated WHERE order_count > 1) * 100.0
+ /(SELECT COUNT(*) FROM check_repeated),2) AS repeated_customer_rate
