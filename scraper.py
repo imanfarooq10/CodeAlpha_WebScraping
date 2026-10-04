@@ -29,7 +29,11 @@ for page in range(1, 51):
     print(f"Page {page} done, total books so far: {len(all_books)}")
     time.sleep(0.5)
 df = pd.DataFrame(all_books)
+rating_map = {"One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
+df["rating"] = df["rating"].map(rating_map)
+df["price"] = df["price"].str.replace("£", "", regex=False).astype(float)
 df.to_csv("books_data.csv", index=False, encoding="utf-8-sig")
 
 print(df.shape)
 print(df.head())
+print(df.dtypes)
